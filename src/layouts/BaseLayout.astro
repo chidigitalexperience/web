@@ -1,0 +1,41 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  fullBleed?: boolean;
+}
+
+const {
+  title,
+  description = 'The CHI 2027 Digital Experience Competition — build an app that innovates the attendee experience of ACM CHI 2027.',
+  fullBleed = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    <title>{title} · CHI Digital Experience Competition</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main id="main" class={fullBleed ? '' : 'container page'}>
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .page {
+    padding: 2.5rem 1.25rem 1rem;
+  }
+</style>

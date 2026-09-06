@@ -1,0 +1,81 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="FAQ">
+  <h1>FAQ</h1>
+  <p class="lede">
+    Questions not answered here? Get in touch: <a href="mailto:app@chi2027.acm.org">app@chi2027.acm.org</a>.
+  </p>
+
+  {entries.length === 0 && <p>No FAQ entries yet.</p>}
+
+  <div class="faq-list">
+    {await Promise.all(entries.map(async (entry) => {
+      const { Content } = await render(entry);
+      return (
+        <details>
+          <summary>
+            {entry.data.question}
+            {entry.data.placeholder && <span class="placeholder-tag">placeholder</span>}
+          </summary>
+          <div class="faq-body">
+            <Content />
+          </div>
+        </details>
+      );
+    }))}
+  </div>
+
+  <p>
+    Chairs: to add or edit an entry, see
+    <code>src/content/faq-README.md</code> — it's a plain Markdown file per
+    question, no code changes needed.
+  </p>
+</BaseLayout>
+
+<style>
+  .lede {
+    color: var(--color-text-muted);
+  }
+
+  .faq-list {
+    margin: 2rem 0;
+  }
+
+  details {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  summary {
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--color-navy);
+  }
+
+  .placeholder-tag {
+    display: inline-block;
+    margin-left: 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-yellow-dark);
+    background: #fff8e6;
+    border: 1px solid var(--color-yellow-dark);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+    vertical-align: middle;
+  }
+
+  .faq-body {
+    margin-top: 0.75rem;
+    color: var(--color-text-muted);
+  }
+</style>

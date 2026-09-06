@@ -1,0 +1,220 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const keyDates = [
+  {
+    milestone: 'Submissions open',
+    date: 'Friday 11 September 2026',
+    detail: 'The initial submission form (a prototype / proof of concept) opens.',
+  },
+  {
+    milestone: 'Prototype deadline',
+    date: 'Friday 4 December 2026',
+    detail: 'Initial submissions close.',
+  },
+  {
+    milestone: 'Notification',
+    date: 'End of January 2027',
+    detail: 'Teams are notified of acceptance. Accepted teams gain access to the accepted-stage form.',
+  },
+  {
+    milestone: 'Accepted-stage submission due',
+    date: 'Friday 26 March 2027',
+    detail: 'Production build, security confirmation, privacy checklist, and consent forms due.',
+  },
+  {
+    milestone: 'Live programme feed published; integration & testing window opens',
+    date: 'April 2027',
+    detail: 'The real CHI 2027 feed goes live at the same URL as the historical feeds.',
+  },
+  {
+    milestone: 'ACM CHI 2027',
+    date: '10–14 May 2027, Pittsburgh, PA',
+    detail: 'Accepted teams are invited to demo at the showcase.',
+  },
+];
+---
+
+<BaseLayout title="Overview" fullBleed>
+  <section class="hero">
+    <div class="container">
+      <h1>Reimagine the attendee experience.</h1>
+      <p class="lede">
+        Developers, designers, and researchers are invited to build apps and
+        tools that innovate the <strong>attendee experience</strong> of
+        ACM&nbsp;CHI&nbsp;2027 — going beyond the official programme app.
+      </p>
+      <a class="btn btn-primary" href="/enter/">Submit your prototype</a>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container">
+      <h2>What this is</h2>
+      <p class="section-lede">
+        This site is the operational home of the competition: full details,
+        the programme data and API we provide, the judging process, and the
+        submission forms. Promotional material and the headline
+        call-to-action live on the <a href="https://chi2027.acm.org/">main CHI 2027 site</a>, which
+        links here.
+      </p>
+    </div>
+  </section>
+
+  <section class="block block-navy">
+    <div class="container">
+      <h2>Key dates</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Milestone</th>
+              <th scope="col">Date</th>
+              <th scope="col">Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {keyDates.map((row) => (
+              <tr>
+                <td>{row.milestone}</td>
+                <td>{row.date}</td>
+                <td>{row.detail}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container">
+      <h2>What we provide</h2>
+      <div class="provide-grid">
+        <div class="provide-card">
+          <strong>A live-updating programme feed</strong>
+          <p>
+            One URL, no API key, no sign-up. Historical CHI programme data
+            (CHI 2025, CHI 2026) is available today, plus a synthetic
+            sandbox feed at CHI 2027 scale for testing.
+          </p>
+          <a href="/programme-data/">Read the full documentation &rarr;</a>
+        </div>
+        <div class="provide-card">
+          <strong>Possible Compute / LLM API credits</strong>
+          <p>Pending sponsorship. Watch this space.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block block-yellow">
+    <div class="container cta-block">
+      <div>
+        <h2>Ready to enter?</h2>
+        <p>
+          The initial submission is a prototype / proof of concept. See
+          the <a href="/judging/">judging criteria</a> and then head to
+          the <a href="/enter/">Enter</a> page.
+        </p>
+      </div>
+      <a class="btn btn-outline" href="/enter/">Submit your prototype</a>
+    </div>
+  </section>
+
+  <section class="block" id="contact">
+    <div class="container">
+      <h2>Contact</h2>
+      <p>
+        For competition queries, judging enquiries, or anything about the
+        programme data: <a href="mailto:app@chi2027.acm.org">app@chi2027.acm.org</a>.
+      </p>
+      <p>
+        For general CHI 2027 conference enquiries unrelated to this
+        competition, see the <a href="https://chi2027.acm.org/">main CHI 2027 site</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 4.5rem 0 3.5rem;
+    background: var(--color-bg);
+  }
+
+  .lede {
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    max-width: 56ch;
+    margin: 1.25rem 0 2rem;
+  }
+
+  .section-lede {
+    max-width: 65ch;
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .block-navy table {
+    margin-top: 1.5rem;
+  }
+
+  .block-navy th,
+  .block-navy td {
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+
+  .block-navy th {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .provide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .provide-card {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+
+  .provide-card strong {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--color-navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .cta-block p {
+    max-width: 55ch;
+  }
+
+  .block-yellow a:not(.btn) {
+    color: var(--color-navy);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: 3rem 0 2.5rem;
+    }
+  }
+</style>

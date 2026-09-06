@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Programme Data" description="Documentation for the CHI programme data feed: URLs, update polling, schema, and licence.">
+  <h1>Programme Data</h1>
+
+  <p class="lede">
+    Everything you need to build against the CHI programme is a single JSON
+    file. No API key, no sign-up, no approval step. You can start right now.
+  </p>
+
+  <pre><code>https://chidigitalexperience.org/data/chi2027/latest.json</code></pre>
+
+  <p>
+    That file contains the complete conference programme — sessions, events,
+    contributions ("contents"), people, rooms, and tracks — and it updates
+    as the programme changes, including during the conference itself.
+  </p>
+
+  <section>
+    <h2>Available now</h2>
+    <table>
+      <thead>
+        <tr><th scope="col">Feed</th><th scope="col">What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/data/chi2026/latest.json</code></td>
+          <td>The full CHI 2026 programme. Real data, frozen. Best starting point.</td>
+        </tr>
+        <tr>
+          <td><code>/data/chi2025/latest.json</code></td>
+          <td>The full CHI 2025 programme. Real data, frozen.</td>
+        </tr>
+        <tr>
+          <td><code>/data/sandbox/latest.json</code></td>
+          <td>A synthetic programme at CHI 2027 scale. Deliberately awkward — see <a href="#sandbox">Test against the sandbox</a>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Available from April 2027</h2>
+    <table>
+      <thead>
+        <tr><th scope="col">Feed</th><th scope="col">What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/data/chi2027/latest.json</code></td>
+          <td>The real CHI 2027 programme, updating through to the end of the conference.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      The 2027 feed is published to everyone at the same URL, with no
+      credentials. There is nothing to apply for and nothing to wait on —
+      the structure is identical to the feeds above.
+    </p>
+  </section>
+
+  <section id="updates">
+    <h2>Checking for updates</h2>
+    <p>
+      <strong>Read this bit even if you skip the rest.</strong> It is the
+      one thing that is easy to get wrong, and getting it wrong means your
+      app shows attendees a room that changed twenty minutes ago.
+    </p>
+
+    <p>Each feed publishes a tiny <code>version.json</code> alongside the programme:</p>
+
+    <pre><code>{`{
+  "edition": "chi2027",
+  "revision": 17,
+  "generated_at": "2027-05-12T09:14:22-04:00",
+  "latest_url": "https://chidigitalexperience.org/data/chi2027/latest.json",
+  "revision_url": "https://chidigitalexperience.org/data/chi2027/revisions/017.json"
+}`}</code></pre>
+
+    <p>
+      Poll <code>version.json</code> with a unique query string, compare the
+      revision to what you already hold, and only fetch the programme when
+      it has moved:
+    </p>
+
+    <pre><code>{`const BASE = 'https://chidigitalexperience.org/data/chi2027';
+
+async function fetchProgrammeIfChanged(knownRevision) {
+  // The ?t= makes every request a distinct URL, so no cache can answer it.
+  const res = await fetch(\`\${BASE}/version.json?t=\${Date.now()}\`, {
+    cache: 'no-store'
+  });
+  const { revision, revision_url } = await res.json();
+
+  if (revision === knownRevision) return null;      // nothing new
+
+  const programme = await fetch(revision_url).then(r => r.json());
+  return { revision, programme };
+}`}</code></pre>
+
+    <p>Poll once a minute during the conference and you will never be more than a minute behind.</p>
+
+    <p>
+      <strong>Why the <code>?t=</code>.</strong> Our hosting applies ten
+      minutes of browser caching to every file and we cannot change that. A
+      unique URL each time steps around it. The revision files it points you
+      to never change once published, so you can cache those as long as you
+      like — forever, ideally.
+    </p>
+
+    <p>
+      <strong>About <code>latest.json</code>.</strong> It always holds the
+      current programme, and it is perfectly good for exploring the data,
+      for scripts, and for apps that load once at startup. But because of
+      that same ten-minute caching, <strong><code>latest.json</code> can be
+      up to ten minutes out of date in a browser.</strong> If your app needs
+      to reflect live changes during the conference, use the pattern above
+      instead. If it doesn't, <code>latest.json</code> is simpler and
+      entirely fine.
+    </p>
+
+    <p>
+      Fair use: poll <code>version.json</code> no more than once every 30
+      seconds (once a minute is plenty), and fetch the immutable revision
+      files rather than re-downloading <code>latest.json</code> in a loop.
+    </p>
+  </section>
+
+  <section>
+    <h2>What's in the file</h2>
+
+    <p>
+      The published feed is the conference system's native export
+      (<code>schemeVersion: 7</code>): camelCase field names,
+      epoch-millisecond dates, and top-level collections
+      <code>sessions</code> / <code>events</code> / <code>contents</code> /
+      <code>people</code> / <code>rooms</code> / <code>tracks</code> / and
+      more, as shown below. There is currently no <code>status</code>,
+      <code>status_note</code>, or <code>last_modified</code> field, and no
+      soft-delete guarantee. The closest analogue to a content "revision"
+      inside the file itself is <code>publicationInfo.version</code>, not a
+      top-level <code>revision</code> field (that lives in
+      <code>version.json</code>, described above).
+    </p>
+
+    <p>Top-level shape (abbreviated):</p>
+
+    <pre><code>{`{
+  "schemeVersion": 7,
+  "cc_licence": "…",
+  "conference": { "id": …, "year": 2027, "startDate": …, "name": "CHI 2027", … },
+  "publicationInfo": { "isDraft": false, "version": 224, … },
+  "rooms":     [ … ],
+  "tracks":    [ … ],
+  "sessions":  [ … ],
+  "events":    [ … ],
+  "contents":  [ … ],
+  "people":    [ … ]
+}`}</code></pre>
+
+    <table>
+      <thead>
+        <tr><th scope="col">Collection</th><th scope="col">Contents</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>sessions</code></td><td>Scheduled paper sessions: room, time slot, chairs, and the contents within.</td></tr>
+        <tr><td><code>events</code></td><td>Standalone scheduled events (receptions, plenaries) with their own start/end times.</td></tr>
+        <tr><td><code>contents</code></td><td>Individual papers and talks: title, abstract, authors, tags/keywords.</td></tr>
+        <tr><td><code>people</code></td><td>Authors and presenters — name and affiliations.</td></tr>
+        <tr><td><code>rooms</code></td><td>Venue rooms, with capacity.</td></tr>
+        <tr><td><code>tracks</code></td><td>The programme's thematic groupings.</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      A JSON Schema (draft, top-level shape only — see the note above) is
+      published at <a href="/data/schema/v1.json"><code>/data/schema/v1.json</code></a>.
+    </p>
+
+    <p>
+      <strong>Times</strong> are epoch milliseconds. <strong>IDs</strong>
+      are integers, stable within an edition.
+    </p>
+  </section>
+
+  <section id="sandbox">
+    <h2>Test against the sandbox</h2>
+    <p>
+      <code>/data/sandbox/latest.json</code> is synthetic, sized like a real
+      CHI, and seeded on purpose with things that break conference apps:
+      very long author lists, non-Latin scripts, very long and very short
+      abstracts, overlapping sessions, nulls in optional fields, and more.
+    </p>
+    <p>
+      There is <strong>no live-changing sandbox feed</strong>. Test your
+      update-handling logic by hand: fetch <code>sandbox</code>, note the
+      revision, wait for a change to be published, fetch again, and confirm
+      your app picks it up.
+    </p>
+  </section>
+
+  <section>
+    <h2>What we don't provide</h2>
+    <p>
+      We provide programme data, and nothing about the person using your
+      app. There is no login endpoint, no attendee directory. Personalisation
+      is yours to build — keep it in memory for the session, or in
+      <code>localStorage</code> on the attendee's own device.
+    </p>
+    <p>
+      <strong>The simplest way to pass the data protection hurdle is to not
+      collect anything.</strong> See <a href="/judging/">Judging</a>.
+    </p>
+    <p>
+      Full text or PDFs of papers are not provided. Link out via each
+      contribution's DOI / ACM Digital Library link instead.
+    </p>
+  </section>
+
+  <section id="licence">
+    <h2>Licence</h2>
+    <p>
+      The programme data is published under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a>.
+    </p>
+    <ul>
+      <li><strong>Attribution.</strong> Credit the source somewhere visible — suggested wording: <em>Programme data © ACM CHI 2027, licensed under CC BY-NC-SA 4.0.</em></li>
+      <li><strong>NonCommercial.</strong> Entries must not be commercial.</li>
+      <li><strong>ShareAlike.</strong> A published derivative of the <em>data</em> must carry the same licence. This does not apply to your app's source code.</li>
+    </ul>
+    <p>
+      The full licence text and this project's specific attribution line are
+      at <a href="/data/LICENCE"><code>/data/LICENCE</code></a>. The licence
+      also travels in each feed's own <code>cc_licence</code> field.
+    </p>
+    <div class="placeholder-notice">
+      <strong>Open question.</strong> Whether <em>NonCommercial</em> is
+      intended to exclude industry entrants, and how it interacts with a
+      free app that has any commercial dimension, is still being resolved
+      with the chairs — see the <a href="/faq/">FAQ</a>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <p>
+      Anything unclear, anything that looks wrong in the data, anything
+      missing: <a href="mailto:app@chi2027.acm.org">app@chi2027.acm.org</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .lede {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+  }
+
+  section {
+    margin: 2.25rem 0;
+  }
+
+  section h2 {
+    color: var(--color-navy);
+  }
+
+  pre code {
+    color: inherit;
+    background: none;
+    padding: 0;
+  }
+</style>

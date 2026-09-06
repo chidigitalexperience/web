@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const criteria = [
+  { name: 'User Experience', weight: '25%' },
+  { name: 'Novelty & Creativity', weight: '25%' },
+  { name: 'Inclusion & Accessibility', weight: '25%' },
+  { name: 'Relevance to CHI Use Cases', weight: '15%' },
+  { name: 'Technical Execution', weight: '10%' },
+];
+---
+
+<BaseLayout title="Judging">
+  <h1>Judging</h1>
+
+  <section>
+    <h2>Acceptance hurdles (pass / fail)</h2>
+    <p>All submissions must meet these to be listed. Not scored.</p>
+    <ul>
+      <li><strong>Open source</strong> — codebase publicly available under an open source licence.</li>
+      <li><strong>Security</strong> — no obvious security vulnerabilities; the jury may exclude unacceptable risk.</li>
+      <li>
+        <strong>Data protection</strong> — accepted teams receive CHI's data
+        protection requirements and must confirm compliance before listing;
+        initial submissions demonstrate intent to comply.
+      </li>
+    </ul>
+    <div class="placeholder-notice">
+      <strong>Placeholder.</strong> The detailed data protection requirements
+      shared with accepted teams are still being finalised. The simplest way
+      to satisfy this hurdle is to not collect personal data at all — see <a href="/programme-data/#licence">What we don't provide</a>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Scored criteria</h2>
+    <table>
+      <thead>
+        <tr><th scope="col">Criterion</th><th scope="col">Weight</th></tr>
+      </thead>
+      <tbody>
+        {criteria.map((c) => (
+          <tr><td>{c.name}</td><td>{c.weight}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Awards</h2>
+    <p>
+      In addition to the highlighted-app selection, the jury gives <strong>category awards</strong> (e.g. best user experience, most
+      innovative, best for inclusion &amp; accessibility; final categories
+      to be confirmed). Awards are recognition/certificate only, announced
+      live at CHI 2027.
+    </p>
+  </section>
+
+  <p><a class="btn btn-primary" href="/enter/">Submit your prototype</a></p>
+</BaseLayout>
+
+<style>
+  section {
+    margin: 2.25rem 0;
+  }
+
+  section h2 {
+    color: var(--color-navy);
+  }
+</style>

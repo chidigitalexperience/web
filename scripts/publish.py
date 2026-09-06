@@ -25,7 +25,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-DATA_ROOT = Path(__file__).resolve().parent.parent / "data"
+DATA_ROOT = Path(__file__).resolve().parent.parent / "public" / "data"
 
 REQUIRED_TOP_LEVEL_KEYS = [
     "schemeVersion",

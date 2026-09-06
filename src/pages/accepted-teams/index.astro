@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MicrosoftFormEmbed from '../../components/MicrosoftFormEmbed.astro';
+import { ACCEPTED_SUBMISSION_FORM_URL } from '../../config/forms.ts';
+
+// This page is unpublished/gated until the end-of-January 2027 notification
+// stage (spec §6). Flip to `true` once teams have been notified.
+const IS_LIVE = false;
+---
+
+<BaseLayout title="Accepted Teams">
+  <h1>Accepted Teams</h1>
+
+  {!IS_LIVE && (
+    <div class="placeholder-notice">
+      <strong>Not yet open.</strong> This page is for teams accepted into
+      the competition. It will open, with the full accepted-stage
+      submission form below, after notification (end of January 2027).
+    </div>
+  )}
+
+  
+
+  <section>
+    <h2>What you'll be asked</h2>
+    <ul>
+      <li>
+        <strong>Technical</strong> — production build URL (integrated with
+        the live CHI 2027 programme feed), JSON update handling, scaling
+        plan, security confirmation, incident and backup contacts.
+      </li>
+      <li>
+        <strong>Submission package</strong> — updated walkthrough video,
+        one-page summary, signed consent form, showcase participation
+        acknowledgement.
+      </li>
+      <li>
+        <strong>Data and privacy</strong> — completed privacy checklist,
+        consent flow confirmation, data retention confirmation.
+      </li>
+      <li>
+        <strong>Ongoing obligations</strong> — availability for a jury
+        walkthrough, participation in the post-event retrospective, and
+        disclosure of significant post-acceptance changes.
+      </li>
+    </ul>
+    <p>
+      Templates for the consent form, privacy checklist, and one-page
+      summary are provided on acceptance.
+    </p>
+  </section>
+
+  <section>
+    <h2>Submit</h2>
+    {IS_LIVE ? (
+      <MicrosoftFormEmbed
+        formUrl={ACCEPTED_SUBMISSION_FORM_URL}
+        title="CHI 2027 Digital Experience Competition — Accepted-Stage Submission"
+      />
+    ) : (
+      <p>
+        The accepted-stage submission form will appear here once accepted
+        teams have been notified.
+      </p>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .lede {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+  }
+
+  section {
+    margin: 2.25rem 0;
+  }
+
+  section h2 {
+    color: var(--color-navy);
+  }
+</style>

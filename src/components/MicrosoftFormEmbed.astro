@@ -1,0 +1,42 @@
+---
+interface Props {
+  formUrl?: string;
+  title: string;
+}
+
+const { formUrl, title } = Astro.props;
+---
+
+{formUrl ? (
+  <div class="ms-form-embed">
+    <iframe
+      title={title}
+      src={formUrl}
+      loading="lazy"
+    ></iframe>
+    <p class="embed-fallback">
+      Form not loading? <a href={formUrl}>Open it in a new tab &rarr;</a>
+    </p>
+  </div>
+) : (
+  <div class="placeholder-notice">
+    <strong>Placeholder.</strong> The Microsoft Forms embed URL has not been
+    configured yet. Set it in <code>src/config/forms.ts</code> once the
+    chairs have created the form and confirmed it accepts responses from
+    people without a Microsoft account ("Anyone with the link can respond").
+  </div>
+)}
+
+<style>
+  .ms-form-embed iframe {
+    width: 100%;
+    min-height: 900px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .embed-fallback {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+</style>

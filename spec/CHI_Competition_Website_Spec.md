@@ -16,7 +16,7 @@ This spec is for the **custom competition website**, which will live at **chidig
 - Documentation of the data and API we provide
 - The data downloads and API access
 - FAQ / Q&A
-- The submission forms (initial and accepted stages)
+- Embedded submission forms (initial and accepted stages) — built/hosted in Microsoft Forms, embedded here (see §5, §6)
 
 **This site does *not* own:**
 
@@ -41,8 +41,8 @@ This spec is for the **custom competition website**, which will live at **chidig
 | **Programme Data** | Full documentation of the programme data feed — see §4a and [CHI_Programme_Data_Website_Content.md](CHI_Programme_Data_Website_Content.md), which is the source of truth for this page's content and build. |
 | **Timeline** | Full timeline and key dates. |
 | **Judging** | Acceptance hurdles (pass/fail) and scored criteria, jury composition, and category awards. |
-| **Enter (Initial Submission)** | The initial submission form. See §5. |
-| **Accepted Teams** | Information and the accepted-stage submission form. Gated or unpublished until the notification stage. See §6. |
+| **Enter (Initial Submission)** | Embeds the Microsoft Forms initial submission form. See §5. |
+| **Accepted Teams** | Information and an embedded Microsoft Forms accepted-stage submission form. Gated or unpublished until the notification stage. See §6. |
 | **FAQ** | Q&A. Should be easy for chairs to update without a developer (see §7). |
 | **Contact** | How to reach the chairs — email app@chi2027.acm.org (also the address for judging enquiries and general queries). |
 
@@ -113,6 +113,8 @@ In addition to the highlighted-app selection, the jury gives **category awards**
 
 ## 5. Initial submission form
 
+> **Build note — embedded, not custom-built.** Submissions are **not** handled by this site. The initial submission form is built and hosted in **Microsoft Forms** and embedded (iframe) — or linked out to, if MS Forms' embed behaves poorly for external/unauthenticated respondents — on the Enter page. Confirm the Microsoft Form is configured to **"Anyone with the link can respond"**, since applicants are external developers without CHI/org Microsoft accounts. The field tables below (§5.1–§5.4) are the spec for **what the Microsoft Form should ask**, for the chairs building it — this site does not implement, validate, or persist these fields itself.
+
 The **initial submission is a prototype / proof of concept** — set that expectation clearly on the form. Group fields into the sections below. Required unless marked optional.
 
 ### 5.1 About your team
@@ -164,6 +166,8 @@ The **initial submission is a prototype / proof of concept** — set that expect
 
 ## 6. Accepted submission form
 
+> **Build note — embedded, not custom-built.** As with §5, this is a **Microsoft Forms** form embedded on (or linked from) the gated Accepted Teams page, not a form built by this site. The field tables below are the spec for the chairs building that Microsoft Form. File-based fields (consent form, one-page summary) rely on MS Forms' native file-upload question type — confirm it accepts uploads from respondents without a Microsoft account under the "anyone with the link" setting.
+
 Shown only to accepted teams (after the end-of-January 2027 notification). Can be a gated page or a separate form released at that stage. Due Friday 26 March 2027.
 
 ### 6.1 Technical
@@ -206,11 +210,10 @@ Render as required checkboxes:
 
 ## 7. Functional requirements
 
-- **Form submission handling** — persist submissions to a datastore; email a confirmation to the lead contact on submit; email/notify chairs on new submission.
-- **File uploads** — support the icon, and any file-based fields (consent form, one-page summary). Enforce type/size limits. Store securely.
-- **Save & resume** *(nice to have)* — let applicants save a draft and return. If out of scope for v1, allow the form to be completed in one sitting but make length manageable.
-- **Deadline enforcement** — close the initial form after the prototype deadline; gate the accepted form to the accepted window.
-- **Admin view** — a simple authenticated view for chairs to list, read, and **export (CSV/JSON)** all submissions, including links to uploaded files.
+> **Note — submission handling moved out of scope.** Both submission forms are built and hosted in Microsoft Forms (§5, §6) and merely embedded/linked here. This site does **not** persist submissions, send submission-related emails, or provide an admin export — those are handled by Microsoft Forms and its native Excel export/notification features. The items below reflect what remains this site's responsibility.
+
+- **Embed the Microsoft Forms forms** — iframe (or link-out fallback) for the initial form on Enter, and the accepted-stage form on the gated Accepted Teams page. Confirm embedding works acceptably (MS Forms iframes can have sizing/scrolling quirks) and that respondents without Microsoft accounts can submit.
+- **Deadline messaging** — the Enter and Accepted Teams pages should reflect the relevant window (e.g. show/hide or swap the embed for a "closed" message around the prototype deadline and the accepted-form due date); actual enforcement of the close date is configured in Microsoft Forms itself.
 - **FAQ management** — chairs should be able to edit FAQ content without a code deploy (CMS, markdown file, or simple editable data source).
 - **Data download & API docs** — the historical JSON is a documented download; the API documentation is a static, versioned page.
 
@@ -223,6 +226,7 @@ These are not yet finalised and should be built as clearly-marked placeholders t
 - **Data protection requirements** — the detailed requirements shared with accepted teams. Referenced by the acceptance hurdle and several form fields. **Do not invent content**; leave a placeholder and a single source of truth to fill in.
 - **Consent form template**, **privacy checklist template**, **one-page summary template** — referenced by the accepted form.
 - **Compute/LLM credits detail** — pending sponsorship.
+- **FAQ / Q&A content** — the questions and answers themselves are not yet written. Build the FAQ page with its editable content mechanism (per §7) wired up and ready, seeded with a couple of obviously-placeholder Q&A entries, so chairs can drop in real content later without any further development work.
 - ~~**Historical JSON data file and schema** — to be supplied by the chairs.~~ **Resolved** — fully specified in [CHI_Programme_Data_Website_Content.md](CHI_Programme_Data_Website_Content.md): feed structure, schema location (`/data/schema/v1.json`), collections, and the CHI 2025/2026/sandbox datasets.
 - ~~**Live API endpoint + auth**~~ **Resolved — no auth.** There is no keyed API; the live CHI 2027 feed is a public, unauthenticated static file at the same path as the historical feeds, published from April 2027. See §4a.
 - **Two open licensing questions** flagged in the data spec (§B6 there) still need chair/legal sign-off before launch: whether *NonCommercial* is meant to exclude industry entrants and how that interacts with a free-but-commercial app, and whether CHI/ACM holds the rights to license paper abstracts under CC BY-NC-SA as distinct from schedule facts. A short FAQ line can resolve most of the first.
@@ -239,9 +243,43 @@ These are not yet finalised and should be built as clearly-marked placeholders t
 
 ---
 
+## 9a. Visual identity — related to, not a copy of, chi2027.acm.org
+
+This site must read as **clearly affiliated** with the main [CHI 2027 site](https://chi2027.acm.org/) — same conference, same event — without reusing its WordPress theme, layout, or page structure. Build a distinct static-site design that echoes the following, pulled from the live site's actual theme CSS and logo assets (not guessed):
+
+**Colour palette** (sampled from `chi2027-custom/style.css` and the banner logo/cityscape SVGs):
+
+| Role | Hex | Source |
+|---|---|---|
+| Primary blue | `#0A5794` | theme CSS, most-used brand blue |
+| Secondary blue | `#2067A4` | theme CSS + WP block preset "primary-blue" |
+| Deep navy | `#294270` / `#083d68` | logo wordmark + theme headers |
+| Bridge yellow (accent) | `#F4B32B` (logo) / `#EAA12F` (cityscape) | the Pittsburgh "yellow bridges" motif — use sparingly, as an accent/CTA colour, not a base colour |
+| Coral (secondary accent) | `#F16667` | logo accent, use very sparingly if at all |
+| Neutrals | `#333` text, `#eee`/`#f1f1f1` backgrounds, `#fff` | theme CSS |
+
+Suggested use: **navy/blue as the dominant brand colour** (nav, headings, links), **bridge yellow reserved for the "Enter" call-to-action and small accent details** (a thin rule, a badge, an icon), neutrals for body content. Do not attempt to match the WordPress theme's exact greys/spacing — just the colour identity.
+
+**Typography** — the main site uses a system-font stack (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, ... sans-serif`), i.e. no custom webfont. Match that: a clean system/sans-serif stack keeps this site feeling like the same family without importing the same theme.
+
+**Motif** — the main site's theme is **"bridges"**, illustrated literally (an SVG Pittsburgh cityscape with yellow bridges over the rivers). Do **not** reuse that illustration. Instead, nod to the theme abstractly and lightly — e.g. a simple line/geometric bridge motif as a header accent or divider, or just the yellow accent colour standing in for it — appropriate to a simpler, developer-facing static site.
+
+**Cross-linking as the primary "related" signal** — beyond colour/type, the clearest way to read as affiliated is explicit: conference name/dates in the header or footer, a visible link back to chi2027.acm.org, and consistent conference branding text ("ACM CHI 2027", Pittsburgh, 10–14 May 2027) rather than visual mimicry alone.
+
+**What not to copy**: the WordPress/Academica theme's specific layout, header/nav structure, widget styling (social icons, dashicons), or the cityscape illustration itself. This site should look like a distinct, more technical/developer-oriented product that happens to share the parent conference's colours and tone.
+
+---
+
 ## 10. Suggested approach
 
-Stack is open, but a good fit would be: a static or lightly-server-rendered site for content pages, with a small backend (or a serverless form handler) for submissions, file storage, and the admin export. Keep content (dates, criteria, FAQ) in editable data files or a lightweight CMS so the chairs can update without a developer. Prioritise the applicant-facing flow and the initial submission form for v1; the accepted-stage form and admin export can follow before the end-of-January 2027 notification.
+Since submissions are handled entirely by embedded Microsoft Forms (§5–§7), this site itself can be a **fully static site** — no backend, no form handler, no datastore, no admin export to build. Prioritise the applicant-facing content pages and getting the Enter-page embed working for v1; the Accepted Teams page/embed can follow before the end-of-January 2027 notification.
+
+**Chosen stack** — built and deployed from within this repo, hosted on GitHub Pages:
+
+- **[Astro](https://astro.build/)** as the site generator — its content collections read page copy, timeline, judging criteria, and FAQ entries directly from **Markdown files**, which is the requirement here: chairs (or anyone) can edit `.md` content without touching code or a CMS. Astro ships zero client-side JS by default, which suits a mostly-static, low-maintenance site, and has a standard GitHub Pages / GitHub Actions deploy path.
+- **npm** as the package manager and dev runtime (`npm install`, `npm run dev`, `npm run build`), with Astro's usual Vite-based build underneath — no need to hand-roll bundling.
+- **Content structure**: one Markdown file (or a small collection) per editable section — Home copy, Timeline, Judging, FAQ entries, the Programme Data page copy, and the §8 placeholder content — under a `src/content/` collection, separate from page templates/layout code. This is what makes the FAQ (§7, §8) and other chair-editable content updatable via a plain file edit and a rebuild, with no separate CMS needed for v1.
+- **Deploy**: GitHub Actions workflow building with npm/Astro on push to `main`, publishing the `dist/` output to GitHub Pages. This is also what hosts the `/data/*` JSON feeds and `/data/schema/v1.json` (§4a) — those are static files served from the same Pages deployment, subject to the same non-configurable 10-minute cache.
 
 ---
 

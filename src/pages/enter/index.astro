@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MicrosoftFormEmbed from '../../components/MicrosoftFormEmbed.astro';
+import { INITIAL_SUBMISSION_FORM_URL } from '../../config/forms.ts';
+---
+
+<BaseLayout title="Enter">
+  <h1>Enter — Initial Submission</h1>
+
+  <p class="lede">
+    The initial submission is a <strong>prototype / proof of concept</strong>,
+    not a finished app. Submissions open <strong>Friday 11 September 2026</strong>
+    and close at the prototype deadline, <strong>Friday 4 December 2026</strong>.
+  </p>
+
+  <p>
+    Before you start, it's worth reading the <a href="/judging/">judging
+    criteria</a> and the <a href="/programme-data/">Programme Data</a> page.
+  </p>
+
+  <section>
+    <h2>What you'll be asked</h2>
+    <p>The form covers, in this order:</p>
+    <ul>
+      <li>
+        <strong>About your team</strong> — team name, lead contact, team
+        members, CHI conflict-of-interest declaration.
+      </li>
+      <li>
+        <strong>About your app</strong> — name, icon, tagline, description,
+        target attendee persona(s), when it's relevant, a demo URL or
+        build, and a walkthrough video (max 5 minutes).
+      </li>
+      <li>
+        <strong>Technical and legal</strong> — public source repository URL,
+        open source licence, third-party libraries/APIs/AI tools used, IP
+        ownership confirmation, and a data handling declaration.
+      </li>
+      <li>
+        <strong>Optional, but strengthens your application</strong> —
+        accessibility features, LLM/AI component details, evidence of user
+        testing, anything else for the jury.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Submit</h2>
+    <MicrosoftFormEmbed
+      formUrl={INITIAL_SUBMISSION_FORM_URL}
+      title="CHI 2027 Digital Experience Competition — Initial Submission"
+    />
+  </section>
+</BaseLayout>
+
+<style>
+  .lede {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+  }
+
+  section {
+    margin: 2.25rem 0;
+  }
+
+  section h2 {
+    color: var(--color-navy);
+  }
+</style>

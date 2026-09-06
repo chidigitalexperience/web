@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chidigitalexperience.org/data/schema/v1.json",
+  "title": "CHI Digital Experience Competition — Programme Feed (schemeVersion 7)",
+  "description": "DRAFT — top-level shape only, generated from inspecting real chi2025/chi2026 feed files. This is the conference system's native export format, not a bespoke schema for this competition: field names are camelCase, dates are epoch milliseconds, and there is no top-level revision/status/last_modified field. Collections beyond the top level (sessions, contents, people, etc.) are not yet fully typed below — treat this file as a starting point, not a complete or validated schema, until it has been checked against all of chi2025, chi2026, and sandbox.",
+  "type": "object",
+  "required": ["schemeVersion", "conference", "sessions", "contents", "people"],
+  "properties": {
+    "schemeVersion": {
+      "type": "integer",
+      "description": "Native export format version from the conference system. Currently 7. Not a per-edition content revision — see version.json for that."
+    },
+    "cc_licence": {
+      "type": "string",
+      "description": "Human-readable licence statement embedded in the feed itself. See /data/LICENCE for the full licence text."
+    },
+    "conference": {
+      "type": "object",
+      "description": "Conference metadata: id, shortName, year, startDate/endDate (epoch ms), fullName, url, location, timeZoneOffset, timeZoneName, logoUrl, name.",
+      "required": ["id", "year", "startDate", "endDate", "name"],
+      "properties": {
+        "id": { "type": "integer" },
+        "shortName": { "type": "string" },
+        "year": { "type": "integer" },
+        "startDate": { "type": "integer", "description": "Epoch milliseconds" },
+        "endDate": { "type": "integer", "description": "Epoch milliseconds" },
+        "fullName": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "location": { "type": "string" },
+        "timeZoneOffset": { "type": "integer", "description": "Minutes offset from UTC" },
+        "timeZoneName": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "publicationInfo": {
+      "type": "object",
+      "description": "Publication/draft status of the programme, as maintained by the conference system. publicationInfo.version is the closest analogue to a content revision number — not a top-level `revision` field.",
+      "properties": {
+        "isDraft": { "type": "boolean" },
+        "isProgramEnabled": { "type": "boolean" },
+        "publicationDate": { "type": "string" },
+        "publicationStatus": { "type": "string" },
+        "version": { "type": "integer" }
+      }
+    },
+    "sponsors": { "type": "array", "description": "Not yet typed in detail." },
+    "sponsorLevels": { "type": "array", "description": "Not yet typed in detail." },
+    "floors": { "type": "array", "description": "Not yet typed in detail." },
+    "rooms": {
+      "type": "array",
+      "description": "Venue rooms.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "setup": { "type": ["string", "null"] },
+          "typeId": { "type": ["integer", "null"] },
+          "capacity": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "description": "Thematic/format groupings.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" }
+        }
+      }
+    },
+    "contentTypes": { "type": "array", "description": "Not yet typed in detail." },
+    "timeSlots": { "type": "array", "description": "Not yet typed in detail." },
+    "sessions": {
+      "type": "array",
+      "description": "Scheduled sessions. Each references a room, a time slot, and the contents/people within it.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "isParallelPresentation": { "type": "boolean" },
+          "typeId": { "type": ["integer", "null"] },
+          "roomId": { "type": ["integer", "null"] },
+          "chairIds": { "type": "array", "items": { "type": "integer" } },
+          "contentIds": { "type": "array", "items": { "type": "integer" } },
+          "timeSlotId": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "Standalone scheduled events (e.g. receptions, plenaries) distinct from paper sessions. Carry their own startDate/endDate in epoch ms rather than a timeSlotId.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "startDate", "endDate"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "roomId": { "type": ["integer", "null"] },
+          "startDate": { "type": "integer" },
+          "endDate": { "type": "integer" },
+          "presenterIds": { "type": "array", "items": { "type": "integer" } }
+        }
+      }
+    },
+    "contents": {
+      "type": "array",
+      "description": "Papers, talks, and other individual contributions. Includes abstract, authors, tags/keywords, and links back to the session(s)/event(s) that contain them.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title"],
+        "properties": {
+          "id": { "type": "integer" },
+          "typeId": { "type": ["integer", "null"] },
+          "title": { "type": "string" },
+          "isBreak": { "type": "boolean" },
+          "trackId": { "type": ["integer", "null"] },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "keywords": { "type": "array", "items": { "type": "string" } },
+          "sessionIds": { "type": "array", "items": { "type": "integer" } },
+          "eventIds": { "type": "array", "items": { "type": "integer" } },
+          "abstract": { "type": ["string", "null"] },
+          "authors": { "type": "array" },
+          "recognitionIds": { "type": "array", "items": { "type": "integer" } }
+        }
+      }
+    },
+    "people": {
+      "type": "array",
+      "description": "Authors, presenters, and chairs.",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "integer" },
+          "firstName": { "type": ["string", "null"] },
+          "lastName": { "type": ["string", "null"] },
+          "middleInitial": { "type": ["string", "null"] },
+          "affiliations": { "type": "array" }
+        }
+      }
+    },
+    "recognitions": { "type": "array", "description": "Awards/recognitions attached to contents. Not yet typed in detail." }
+  }
+}
