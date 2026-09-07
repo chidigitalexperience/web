@@ -17,7 +17,18 @@ const currentPath = Astro.url.pathname;
     <a class="brand" href="/">
       <span class="brand-title">CHI Digital Experience Competition</span>
     </a>
-    <nav aria-label="Primary">
+
+    <button
+      type="button"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="primary-nav"
+    >
+      <span class="visually-hidden">Menu</span>
+      <span class="nav-toggle-icon" aria-hidden="true"></span>
+    </button>
+
+    <nav aria-label="Primary" id="primary-nav" class="primary-nav">
       <ul>
         {nav.map((item) => (
           <li>
@@ -27,8 +38,8 @@ const currentPath = Astro.url.pathname;
           </li>
         ))}
       </ul>
+      <a class="btn btn-primary enter-cta" href="/enter/">Enter</a>
     </nav>
-    <a class="btn btn-primary enter-cta" href="/enter/">Enter</a>
   </div>
 </header>
 
@@ -36,6 +47,7 @@ const currentPath = Astro.url.pathname;
   .site-header {
     background: transparent;
     color: var(--color-text);
+    position: relative;
   }
 
   .header-inner {
@@ -57,6 +69,13 @@ const currentPath = Astro.url.pathname;
   .brand-title {
     font-weight: 700;
     font-size: 1.05rem;
+  }
+
+  .primary-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
   }
 
   nav ul {
@@ -92,16 +111,112 @@ const currentPath = Astro.url.pathname;
   .enter-cta {
     padding: 0.55rem 1.3rem;
     border-radius: 999px;
+    white-space: nowrap;
   }
 
-  @media (max-width: 640px) {
-    .header-inner {
+  .nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background: transparent;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .nav-toggle-icon,
+  .nav-toggle-icon::before,
+  .nav-toggle-icon::after {
+    display: block;
+    width: 1.25rem;
+    height: 2px;
+    background: var(--color-navy);
+    border-radius: 1px;
+    position: relative;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .nav-toggle-icon::before,
+  .nav-toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .nav-toggle-icon::before {
+    top: -6px;
+  }
+
+  .nav-toggle-icon::after {
+    top: 6px;
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle-icon {
+    background: transparent;
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle-icon::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle-icon::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width: 780px) {
+    .nav-toggle {
+      display: flex;
+    }
+
+    .primary-nav {
+      display: none;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: stretch;
+      width: 100%;
+      margin-left: 0;
+      padding: 0.5rem 1.25rem 1.25rem;
+      gap: 1rem;
+    }
+
+    .primary-nav.is-open {
+      display: flex;
+    }
+
+    nav ul {
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    nav a {
+      width: 100%;
     }
 
     .enter-cta {
-      order: -1;
+      text-align: center;
     }
   }
 </style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.getElementById('primary-nav');
+
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    nav.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).tagName === 'A' && window.matchMedia('(max-width: 780px)').matches) {
+        nav.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>

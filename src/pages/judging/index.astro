@@ -26,21 +26,22 @@ const criteria = [
       </li>
     </ul>
     <div class="placeholder-notice">
-      <strong>Placeholder.</strong> The detailed data protection requirements
-      shared with accepted teams are still being finalised. The simplest way
-      to satisfy this hurdle is to not collect personal data at all — see <a href="/programme-data/#licence">What we don't provide</a>.
+      <strong>Personal Data</strong> The detailed data protection requirements
+      that will be shared with accepted teams are still being finalised. 
+      The simplest way to satisfy this hurdle is to not collect personal data at all, or only collect data on the users' device — see <a href="/programme-data/#licence">What we don't provide</a>.
+      However, we appreciate many solutions will require this, so please be mindful of what you are capturing and how you are storing data, to avoid challenges for later compliance.
     </div>
   </section>
 
   <section>
     <h2>Scored criteria</h2>
-    <table>
+    <table class="responsive-stack">
       <thead>
         <tr><th scope="col">Criterion</th><th scope="col">Weight</th></tr>
       </thead>
       <tbody>
         {criteria.map((c) => (
-          <tr><td>{c.name}</td><td>{c.weight}</td></tr>
+          <tr><td data-label="Criterion">{c.name}</td><td data-label="Weight">{c.weight}</td></tr>
         ))}
       </tbody>
     </table>
@@ -51,8 +52,7 @@ const criteria = [
     <p>
       In addition to the highlighted-app selection, the jury gives <strong>category awards</strong> (e.g. best user experience, most
       innovative, best for inclusion &amp; accessibility; final categories
-      to be confirmed). Awards are recognition/certificate only, announced
-      live at CHI 2027.
+      to be confirmed). Awards will be announced live at CHI 2027.
     </p>
   </section>
 

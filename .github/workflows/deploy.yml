@@ -29,6 +29,8 @@ jobs:
         run: |
           test -f dist/data/LICENCE
           test -f dist/data/schema/v1.json
+          test -f dist/data/chi2023/latest.json
+          test -f dist/data/chi2024/latest.json
           test -f dist/data/chi2025/latest.json
           test -f dist/data/chi2026/latest.json
           test -f dist/data/sandbox/latest.json

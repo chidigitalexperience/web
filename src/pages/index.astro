@@ -44,6 +44,7 @@ const keyDates = [
         tools that innovate the <strong>attendee experience</strong> of
         ACM&nbsp;CHI&nbsp;2027 — going beyond the official programme app.
       </p>
+      <a class="cfp-eyebrow" href="https://chi2027.acm.org/authors/app/">&larr; CHI 2027 Call for Participation</a>
       <a class="btn btn-primary" href="/enter/">Submit your prototype</a>
     </div>
   </section>
@@ -65,7 +66,7 @@ const keyDates = [
     <div class="container">
       <h2>Key dates</h2>
       <div class="table-wrap">
-        <table>
+        <table class="responsive-stack">
           <thead>
             <tr>
               <th scope="col">Milestone</th>
@@ -76,9 +77,9 @@ const keyDates = [
           <tbody>
             {keyDates.map((row) => (
               <tr>
-                <td>{row.milestone}</td>
-                <td>{row.date}</td>
-                <td>{row.detail}</td>
+                <td data-label="Milestone">{row.milestone}</td>
+                <td data-label="Date">{row.date}</td>
+                <td data-label="Detail">{row.detail}</td>
               </tr>
             ))}
           </tbody>
@@ -95,7 +96,7 @@ const keyDates = [
           <strong>A live-updating programme feed</strong>
           <p>
             One URL, no API key, no sign-up. Historical CHI programme data
-            (CHI 2025, CHI 2026) is available today, plus a synthetic
+            (CHI 2023–2026) is available today, plus a synthetic
             sandbox feed at CHI 2027 scale for testing.
           </p>
           <a href="/programme-data/">Read the full documentation &rarr;</a>
@@ -141,6 +142,20 @@ const keyDates = [
   .hero {
     padding: 4.5rem 0 3.5rem;
     background: var(--color-bg);
+  }
+
+  .cfp-eyebrow {
+    display: block;
+    color: var(--color-blue);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
+  }
+
+  .cfp-eyebrow:hover {
+    text-decoration: underline;
+    color: var(--color-blue-2);
   }
 
   .lede {

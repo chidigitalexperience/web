@@ -152,6 +152,68 @@ th {
   background: var(--color-bg-alt);
 }
 
+/* Responsive tables: below the breakpoint, each row becomes a stacked
+   card and each cell shows its column header via data-label. */
+@media (max-width: 640px) {
+  table.responsive-stack {
+    border: none;
+  }
+
+  table.responsive-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  table.responsive-stack,
+  table.responsive-stack tbody,
+  table.responsive-stack tr,
+  table.responsive-stack td {
+    display: block;
+    width: 100%;
+  }
+
+  table.responsive-stack tr {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  table.responsive-stack td {
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.6rem 0.8rem;
+  }
+
+  table.responsive-stack td:last-child {
+    border-bottom: none;
+  }
+
+  table.responsive-stack td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  /* Dark block variant (homepage Key Dates table) */
+  .block-navy table.responsive-stack tr {
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .block-navy table.responsive-stack td {
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+  }
+}
+
 .btn {
   display: inline-block;
   padding: 0.85rem 1.75rem;

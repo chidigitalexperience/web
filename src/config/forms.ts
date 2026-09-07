@@ -4,6 +4,7 @@
 // spec/CHI_Competition_Website_Spec.md §5, §6) — the site will render a
 // placeholder notice instead of a broken embed until then.
 
-export const INITIAL_SUBMISSION_FORM_URL: string | undefined = undefined;
+export const INITIAL_SUBMISSION_FORM_URL: string | undefined =
+  'https://forms.cloud.microsoft/e/8SBbmYZuRa';
 
 export const ACCEPTED_SUBMISSION_FORM_URL: string | undefined = undefined;

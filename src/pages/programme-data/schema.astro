@@ -1,0 +1,419 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Schema Reference"
+  description="Field-by-field reference for the CHI programme data feed, generated from the published JSON Schema."
+>
+  <h1>Schema Reference</h1>
+
+  <p class="lede">
+    A field-by-field reference for the programme feed, in plain English.
+    This page covers the same information as <a href="/data/schema/v1.json"
+      ><code>/data/schema/v1.json</code></a
+    > — use that file to generate types or validate locally; use this page to
+    read.
+  </p>
+
+  <div class="placeholder-notice">
+    <strong>Draft.</strong> This reference (and the underlying schema) covers
+    the shape confirmed against the real <code>chi2023</code>–<code
+      >chi2026</code
+    > and <code>sandbox</code> feeds, but is not yet a complete or formally validated
+    schema — some collections below are marked "not yet typed in detail." See <a href="/programme-data/">Programme Data</a> for the update-polling
+    pattern and licence.
+  </div>
+
+  <p>
+    <a href="/programme-data/">&larr; Back to Programme Data</a>
+  </p>
+
+  <section>
+    <h2>Top-level fields</h2>
+
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">What it is</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Field"><code>schemeVersion</code></td>
+          <td data-label="Type">integer</td>
+          <td data-label="Required">Yes</td>
+          <td data-label="What it is"
+            >Native export format version from the conference system.
+            Currently <code>7</code>. Not a per-edition content revision —
+            see <code>version.json</code> for that.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>cc_licence</code></td>
+          <td data-label="Type">string</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Human-readable licence statement embedded in the feed itself.
+            See <a href="/data/LICENCE">/data/LICENCE</a> for the full text.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>conference</code></td>
+          <td data-label="Type">object</td>
+          <td data-label="Required">Yes</td>
+          <td data-label="What it is"
+            >Conference metadata. See <a href="#conference">field detail</a> below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>publicationInfo</code></td>
+          <td data-label="Type">object</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Publication/draft status. See <a href="#publicationinfo"
+              >field detail</a
+            > below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>rooms</code></td>
+          <td data-label="Type">array of objects</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Venue rooms. See <a href="#rooms">field detail</a> below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>tracks</code></td>
+          <td data-label="Type">array of objects</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Thematic/format groupings. See <a href="#tracks"
+              >field detail</a
+            > below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>sessions</code></td>
+          <td data-label="Type">array of objects</td>
+          <td data-label="Required">Yes</td>
+          <td data-label="What it is"
+            >Scheduled paper sessions. See <a href="#sessions"
+              >field detail</a
+            > below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>events</code></td>
+          <td data-label="Type">array of objects</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Standalone scheduled events. See <a href="#events"
+              >field detail</a
+            > below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>contents</code></td>
+          <td data-label="Type">array of objects</td>
+          <td data-label="Required">Yes</td>
+          <td data-label="What it is"
+            >Papers, talks, and other contributions. See <a href="#contents"
+              >field detail</a
+            > below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>people</code></td>
+          <td data-label="Type">array of objects</td>
+          <td data-label="Required">Yes</td>
+          <td data-label="What it is"
+            >Authors, presenters, and chairs. See <a href="#people"
+              >field detail</a
+            > below.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"><code>recognitions</code></td>
+          <td data-label="Type">array</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Awards/recognitions attached to contents. Not yet typed in
+            detail.</td
+          >
+        </tr>
+        <tr>
+          <td data-label="Field"
+            ><code>sponsors</code>, <code>sponsorLevels</code>,
+            <code>floors</code>, <code>contentTypes</code>,
+            <code>timeSlots</code></td
+          >
+          <td data-label="Type">array</td>
+          <td data-label="Required">No</td>
+          <td data-label="What it is"
+            >Present in the feed but not yet typed in detail.</td
+          >
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      <strong>Times</strong> are epoch milliseconds. <strong>IDs</strong> are integers,
+      stable within an edition — the same session's ID is the same in the
+      historical file, in the live feed, and after it gets moved.
+    </p>
+  </section>
+
+  <section id="conference">
+    <h2><code>conference</code></h2>
+    <p>Conference metadata. A single object, not an array.</p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>shortName</code></td><td data-label="Type">string</td><td data-label="Required">No</td><td data-label="Notes">e.g. "CHI"</td></tr>
+        <tr><td data-label="Field"><code>year</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>startDate</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">Epoch milliseconds</td></tr>
+        <tr><td data-label="Field"><code>endDate</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">Epoch milliseconds</td></tr>
+        <tr><td data-label="Field"><code>fullName</code></td><td data-label="Type">string</td><td data-label="Required">No</td><td data-label="Notes">e.g. "The ACM CHI conference on Human Factors in Computing Systems"</td></tr>
+        <tr><td data-label="Field"><code>url</code></td><td data-label="Type">string (URI)</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>location</code></td><td data-label="Type">string</td><td data-label="Required">No</td><td data-label="Notes">e.g. "Pittsburgh, PA"</td></tr>
+        <tr><td data-label="Field"><code>timeZoneOffset</code></td><td data-label="Type">integer</td><td data-label="Required">No</td><td data-label="Notes">Minutes offset from UTC</td></tr>
+        <tr><td data-label="Field"><code>timeZoneName</code></td><td data-label="Type">string</td><td data-label="Required">No</td><td data-label="Notes">e.g. "America/New_York"</td></tr>
+        <tr><td data-label="Field"><code>name</code></td><td data-label="Type">string</td><td data-label="Required">Yes</td><td data-label="Notes">e.g. "CHI 2027"</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="publicationinfo">
+    <h2><code>publicationInfo</code></h2>
+    <p>
+      Publication/draft status maintained by the conference system. A single
+      object, not an array.
+    </p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>isDraft</code></td><td data-label="Type">boolean</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>isProgramEnabled</code></td><td data-label="Type">boolean</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>publicationDate</code></td><td data-label="Type">string</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>publicationStatus</code></td><td data-label="Type">string</td><td data-label="Notes">e.g. "PUBLISHED"</td></tr>
+        <tr><td data-label="Field"><code>version</code></td><td data-label="Type">integer</td><td data-label="Notes"><strong>The closest analogue to a content "revision" inside the file itself</strong> — not a top-level <code>revision</code> field (that lives in <code>version.json</code>, see <a href="/programme-data/#updates">Checking for updates</a>).</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="rooms">
+    <h2><code>rooms</code></h2>
+    <p>Array of venue room objects.</p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>name</code></td><td data-label="Type">string</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>setup</code></td><td data-label="Type">string or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>typeId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>capacity</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="tracks">
+    <h2><code>tracks</code></h2>
+    <p>Array of thematic/format grouping objects.</p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td></tr>
+        <tr><td data-label="Field"><code>name</code></td><td data-label="Type">string</td><td data-label="Required">Yes</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sessions">
+    <h2><code>sessions</code></h2>
+    <p>
+      Array of scheduled paper session objects — room, time slot, chairs, and
+      the contents within.
+    </p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>name</code></td><td data-label="Type">string</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>isParallelPresentation</code></td><td data-label="Type">boolean</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>typeId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>roomId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">References <code>rooms[].id</code>. Null if no room assigned yet.</td></tr>
+        <tr><td data-label="Field"><code>chairIds</code></td><td data-label="Type">array of integers</td><td data-label="Required">No</td><td data-label="Notes">References <code>people[].id</code>.</td></tr>
+        <tr><td data-label="Field"><code>contentIds</code></td><td data-label="Type">array of integers</td><td data-label="Required">No</td><td data-label="Notes">References <code>contents[].id</code>.</td></tr>
+        <tr><td data-label="Field"><code>timeSlotId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="events">
+    <h2><code>events</code></h2>
+    <p>
+      Array of standalone scheduled event objects (receptions, plenaries)
+      distinct from paper sessions — these carry their own start/end times
+      rather than a time slot reference.
+    </p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>name</code></td><td data-label="Type">string</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>roomId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">References <code>rooms[].id</code>.</td></tr>
+        <tr><td data-label="Field"><code>startDate</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">Epoch milliseconds</td></tr>
+        <tr><td data-label="Field"><code>endDate</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">Epoch milliseconds</td></tr>
+        <tr><td data-label="Field"><code>presenterIds</code></td><td data-label="Type">array of integers</td><td data-label="Required">No</td><td data-label="Notes">References <code>people[].id</code>.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="contents">
+    <h2><code>contents</code></h2>
+    <p>
+      Array of individual paper/talk contribution objects — title, abstract,
+      authors, tags/keywords, and links back to the session(s)/event(s) that
+      contain them.
+    </p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>typeId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>title</code></td><td data-label="Type">string</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>isBreak</code></td><td data-label="Type">boolean</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>trackId</code></td><td data-label="Type">integer or null</td><td data-label="Required">No</td><td data-label="Notes">References <code>tracks[].id</code>.</td></tr>
+        <tr><td data-label="Field"><code>tags</code></td><td data-label="Type">array of strings</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>keywords</code></td><td data-label="Type">array of strings</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>sessionIds</code></td><td data-label="Type">array of integers</td><td data-label="Required">No</td><td data-label="Notes">References <code>sessions[].id</code>.</td></tr>
+        <tr><td data-label="Field"><code>eventIds</code></td><td data-label="Type">array of integers</td><td data-label="Required">No</td><td data-label="Notes">References <code>events[].id</code>.</td></tr>
+        <tr><td data-label="Field"><code>abstract</code></td><td data-label="Type">string or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>authors</code></td><td data-label="Type">array</td><td data-label="Required">No</td><td data-label="Notes">Not yet typed in detail.</td></tr>
+        <tr><td data-label="Field"><code>recognitionIds</code></td><td data-label="Type">array of integers</td><td data-label="Required">No</td><td data-label="Notes">References <code>recognitions[].id</code>.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="people">
+    <h2><code>people</code></h2>
+    <p>Array of author/presenter/chair objects.</p>
+    <table class="responsive-stack">
+      <thead>
+        <tr>
+          <th scope="col">Field</th>
+          <th scope="col">Type</th>
+          <th scope="col">Required</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Field"><code>id</code></td><td data-label="Type">integer</td><td data-label="Required">Yes</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>firstName</code></td><td data-label="Type">string or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>lastName</code></td><td data-label="Type">string or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>middleInitial</code></td><td data-label="Type">string or null</td><td data-label="Required">No</td><td data-label="Notes">—</td></tr>
+        <tr><td data-label="Field"><code>affiliations</code></td><td data-label="Type">array</td><td data-label="Required">No</td><td data-label="Notes">Not yet typed in detail.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Top-level shape (abbreviated JSON)</h2>
+    <pre><code>{`{
+  "schemeVersion": 7,
+  "cc_licence": "…",
+  "conference": { "id": …, "year": 2027, "startDate": …, "name": "CHI 2027", … },
+  "publicationInfo": { "isDraft": false, "version": 224, … },
+  "rooms":     [ … ],
+  "tracks":    [ … ],
+  "sessions":  [ … ],
+  "events":    [ … ],
+  "contents":  [ … ],
+  "people":    [ … ]
+}`}</code></pre>
+  </section>
+
+  <p>
+    <a href="/data/schema/v1.json">Machine-readable schema (JSON Schema)</a>
+    &middot;
+    <a href="/programme-data/">&larr; Back to Programme Data</a>
+  </p>
+</BaseLayout>
+
+<style>
+  .lede {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+  }
+
+  section {
+    margin: 2.25rem 0;
+  }
+
+  section h2 {
+    color: var(--color-navy);
+  }
+
+  section h2 code {
+    font-size: 0.85em;
+  }
+
+  pre code {
+    color: inherit;
+    background: none;
+    padding: 0;
+  }
+</style>
