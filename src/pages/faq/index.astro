@@ -1,40 +1,44 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+const entries = (await getCollection("faq")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 ---
 
 <BaseLayout title="FAQ">
   <h1>FAQ</h1>
   <p class="lede">
-    Questions not answered here? Get in touch: <a href="mailto:app@chi2027.acm.org">app@chi2027.acm.org</a>.
+    Questions not answered here? Get in touch: <a
+      href="mailto:app@chi2027.acm.org">app@chi2027.acm.org</a
+    >.
   </p>
 
   {entries.length === 0 && <p>No FAQ entries yet.</p>}
 
   <div class="faq-list">
-    {await Promise.all(entries.map(async (entry) => {
-      const { Content } = await render(entry);
-      return (
-        <details>
-          <summary>
-            {entry.data.question}
-            {entry.data.placeholder && <span class="placeholder-tag">placeholder</span>}
-          </summary>
-          <div class="faq-body">
-            <Content />
-          </div>
-        </details>
-      );
-    }))}
+    {
+      await Promise.all(
+        entries.map(async (entry) => {
+          const { Content } = await render(entry);
+          return (
+            <details>
+              <summary>
+                {entry.data.question}
+                {entry.data.placeholder && (
+                  <span class="placeholder-tag">placeholder</span>
+                )}
+              </summary>
+              <div class="faq-body">
+                <Content />
+              </div>
+            </details>
+          );
+        }),
+      )
+    }
   </div>
-
-  <p>
-    Chairs: to add or edit an entry, see
-    <code>src/content/faq-README.md</code> — it's a plain Markdown file per
-    question, no code changes needed.
-  </p>
 </BaseLayout>
 
 <style>
