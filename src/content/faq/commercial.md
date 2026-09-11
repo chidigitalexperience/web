@@ -1,7 +1,7 @@
 ---
 question: "Does 'NonCommercial' rule out entries with any commercial dimension?"
 order: 2
-placeholder: true
+placeholder: false
 ---
 
 The "NonCommercial" term comes from the [programme data](/programme-data)
