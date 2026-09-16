@@ -7,12 +7,14 @@ interface Props {
   title: string;
   description?: string;
   fullBleed?: boolean;
+  headerVariant?: 'home' | 'compact';
 }
 
 const {
   title,
   description = 'The CHI 2027 Digital Experience Competition — build an app that innovates the attendee experience of ACM CHI 2027.',
   fullBleed = false,
+  headerVariant = 'compact',
 } = Astro.props;
 ---
 
@@ -26,7 +28,7 @@ const {
     <title>{title} · CHI Digital Experience Competition</title>
   </head>
   <body>
-    <SiteHeader />
+    <SiteHeader variant={headerVariant} />
     <main id="main" class={fullBleed ? '' : 'container page'}>
       <slot />
     </main>

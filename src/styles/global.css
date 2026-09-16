@@ -4,6 +4,8 @@
   --color-blue-2: #2067a4;
   --color-yellow: #f4b32b;
   --color-yellow-dark: #c98f13;
+  --color-coral: #f16667;
+  --color-coral-dark: #d94647;
   --color-text: #232323;
   --color-text-muted: #55606b;
   --color-bg: #ffffff;
@@ -40,9 +42,10 @@ body {
 h1,
 h2,
 h3 {
-  font-weight: 800;
-  line-height: 1.1;
+  font-weight: 600;
+  line-height: 1.15;
   letter-spacing: -0.01em;
+  color: var(--color-navy);
 }
 
 h1 {
@@ -50,7 +53,7 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-size: clamp(1.4rem, 3vw, 1.5rem);
 }
 
 img {
@@ -59,10 +62,11 @@ img {
 
 a {
   color: var(--color-blue);
+  text-decoration: underline;
 }
 
 a:hover {
-  color: var(--color-blue-2);
+  color: #333;
 }
 
 :focus-visible {
@@ -216,29 +220,25 @@ th {
 
 .btn {
   display: inline-block;
-  padding: 0.85rem 1.75rem;
-  border-radius: var(--radius-lg);
+  padding: 11px 22px;
+  border-radius: 4px;
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 0.95rem;
   text-decoration: none;
   border: 2px solid transparent;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 
 .btn-primary {
-  background: var(--color-yellow);
-  color: var(--color-navy);
-  border-color: var(--color-yellow-dark);
-  box-shadow: 0 3px 0 var(--color-yellow-dark);
+  background: var(--color-blue-2);
+  color: #fff;
+  border-color: var(--color-blue-2);
 }
 
 .btn-primary:hover {
-  background: var(--color-yellow-dark);
-  color: var(--color-navy);
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: #fff;
 }
 
 .btn-secondary {
