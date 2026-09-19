@@ -5,6 +5,8 @@ interface Props {
 
 const { variant = 'compact' } = Astro.props;
 
+const CHI2027_URL = 'https://chi2027.acm.org/digital-experience-competition/';
+
 const nav = [
   { href: '/', label: 'Digital Experience Competition' },
   { href: '/programme-data/', label: 'Programme Data' },
@@ -39,6 +41,11 @@ const currentPath = Astro.url.pathname;
             </a>
           </li>
         ))}
+        <li>
+          <a class="chi-site-link" href={CHI2027_URL} target="_blank" rel="noopener">
+            CHI 2027 site <span aria-hidden="true">&#8599;</span>
+          </a>
+        </li>
         <li><a class="btn btn-primary enter-cta" href="/enter/">Enter</a></li>
       </ul>
     </div>
@@ -122,6 +129,29 @@ const currentPath = Astro.url.pathname;
   .primary-nav a[aria-current='page'] {
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+
+  .chi-site-link {
+    color: var(--color-coral) !important;
+    border: 1.5px solid var(--color-coral);
+    border-radius: 999px;
+    padding: 5px 14px !important;
+  }
+
+  .chi-site-link:hover {
+    background: var(--color-coral);
+    color: var(--color-navy) !important;
+    opacity: 1 !important;
+  }
+
+  .main-nav-home .chi-site-link {
+    color: var(--color-coral-dark) !important;
+    border-color: var(--color-coral-dark);
+  }
+
+  .main-nav-home .chi-site-link:hover {
+    background: var(--color-coral-dark);
+    color: #fff !important;
   }
 
   .enter-cta {
